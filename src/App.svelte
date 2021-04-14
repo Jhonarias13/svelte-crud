@@ -7,6 +7,7 @@
   };
   let tasks = [];
   let editStatus = false; // app status
+  let currentId;
 
   // funcion para traer objetos guardados en firebase
   db.collection("task").onSnapshot((querySnapshot) => {
@@ -29,55 +30,87 @@
     alert("new task created");
   };
 
+  const updateTask = async () => {
+    await db.collection("task").doc(currentId).update(task);
+  };
+
   const handleSubmit = () => {
-    addTask();
-    task = {
-      name: "",
-      description: "",
-    };
+    if (!editStatus) {
+      addTask();
+    } else {
+      // updateTask();
+      updateTask(currentId);
+    }
+
+    //reset object
+    task = { name: "", description: "" };
+  };
+  // delete task
+  const deleteTask = async (id) => {
+    await db.collection("task").doc(id).delete();
   };
 
-  const deleteTask = async id => {
-    await db.collection('task').doc(id).delete();
-  };
-
-  const editTask = currentTask => {
+  // edit task
+  const editTask = (currentTask) => {
     editStatus = true; //app status
     task.name = currentTask.name;
     task.description = currentTask.description;
-  }
-  const onCancel = () => {
-    
-  }
+    currentId = currentTask.id;
+  };
 
+  // cancel to update
+  const onCancel = () => {
+    editStatus = false;
+    task.name = "";
+    task.description = "";
+  };
 </script>
 
-<form on:submit|preventDefault={handleSubmit}>
-  <input bind:value={task.name} type="text" placeholder="write a new task" />
-  <textarea
-    bind:value={task.description}
-    type="text"
-    placeholder="write a  task description"
-    rows="3"
-  />
-  <button> 
-    
-    {#if !editStatus}Save {:else}Update{/if}
-    
-  </button>
-  {#if editStatus}
-  <button on:click={onCancel}>cancel</button>
-  {/if}
-</form>
-
-{#each tasks as task}
+<main class="container h-auto">
   <div>
-    <h5>{task.name}</h5>
-    <p>{task.description}</p>
-    <button on:click={deleteTask(task.id)}>Delete</button>
-    <button on:click={editTask(task)}>Edit</button>
+    <h1 class="text-center m-2">TaskAPP</h1>
   </div>
-{/each}
+  <form on:submit|preventDefault={handleSubmit} class="card card-body">
+    <div class="form-group">
+      <input
+      bind:value={task.name}
+      type="text"
+      placeholder="write a new task"
+      class="form-control"
+    />
+    </div>
+    <div class="form-group">
+      <textarea
+      bind:value={task.description}
+      type="text"
+      placeholder="write a  task description"
+      rows="3"
+      class="form-control"
+    />
+    </div>
+    <button class="btn btn-primary">
+      {#if !editStatus}Save {:else}Update{/if}
+    </button>
+    {#if editStatus}
+      <button on:click={onCancel} class="btn btn-info mt-2">cancel</button>
+    {/if}
+  </form>
+
+  {#each tasks as task}
+    <div class="card card-body mt-4">
+      <h5>{task.name}</h5>
+      <p>{task.description}</p>
+      <button on:click={deleteTask(task.id)} class="btn btn-danger"
+        >Delete</button
+      >
+      <button on:click={editTask(task)} class="btn btn-info mt-2">Edit</button>
+    </div>
+  {/each}
+  
+</main>
+<footer class="footer p-3 mt-4 text-center bg-light">
+  Development By <a href="http://www.studio.dev">StudioDev</a>
+</footer>
 
 <style>
 </style>
