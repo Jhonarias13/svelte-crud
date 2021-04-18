@@ -17,7 +17,6 @@
       docs.push({ ...doc.data(), id: doc.id });
     });
     tasks = [...docs];
-    // console.log(tasks);
   });
 
   const addTask = async () => {
@@ -28,7 +27,9 @@
         ...task,
         createdAt: Date.now(),
       });
-    toastr.success("New Task created");
+    toastr.success("New Task created", {
+      timeOut: 1000,
+    });
   };
 
   const updateTask = async () => {
@@ -39,7 +40,6 @@
     if (!editStatus) {
       addTask();
     } else {
-      // updateTask();
       updateTask(currentId);
     }
 
@@ -67,7 +67,7 @@
   };
 </script>
 
-<main class="container h-auto">
+<main class="container">
   <div class="header">
     <h1 class="text-center m-2">TaskAPP</h1>
   </div>
@@ -101,22 +101,31 @@
     {/if}
   </form>
 
-  {#each tasks as task}
-    <div class="card card-body mt-4">
-      <div class="d-flex justify-content-between align-items-center">
-        <h5>{task.name}</h5>
-        <i class="fas fa-pen fa-lg" on:click={editTask(task)} />
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4">
+    {#each tasks as task}
+      <div class="col task">
+        <div class="card card-body mt-4">
+          <div class="d-flex justify-content-between align-items-center">
+            <h5>{task.name}</h5>
+            <i class="fas fa-pen fa-lg" on:click={editTask(task)} />
+          </div>
+          <p>{task.description}</p>
+          <button on:click={deleteTask(task.id)} class="btn btn-danger"
+            ><i class="far fa-trash-alt fa-lg" /></button
+          >
+        </div>
       </div>
-      <p>{task.description}</p>
-      <button on:click={deleteTask(task.id)} class="btn btn-danger"
-        ><i class="far fa-trash-alt fa-lg" /></button
-      >
-    </div>
-  {/each}
+    {/each}
+  </div>
 </main>
-<footer class="footer p-3 mt-4 text-center bg-light">
-  Development By <a href="http://www.studio.dev">StudioDev</a>
+<footer class="footer p-1 mt-4 text-center bg-light fixed-bottom">
+  TaskApp &copy; 2021 🚀 Development By <a href="http://www.studio.dev"
+    >StudioDev</a
+  >
 </footer>
 
 <style>
+  .task:last-child {
+    margin-bottom: 3rem;
+  }
 </style>

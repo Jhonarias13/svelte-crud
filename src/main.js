@@ -1,7 +1,7 @@
 import App from './App.svelte';
 import './firebase';
 
-import 'bootswatch/dist/lux/bootstrap.min.css';
+import 'bootswatch/dist/cerulean/bootstrap.min.css';
 import 'toastr/build/toastr.min.js';
 import 'toastr/build/toastr.min.css';
 

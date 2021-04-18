@@ -38,6 +38,7 @@ export default {
         file: 'public/build/bundle.js'
     },
     plugins: [
+
         css({ output: 'custom.css' }),
         svelte({
             compilerOptions: {
